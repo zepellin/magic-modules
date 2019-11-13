@@ -90,12 +90,6 @@ objects:
               Values greater than 5 and negative values are not allowed.
             required: false
             input: true
-            at_least_one_of:
-              - retry_config.0.retry_count
-              - retry_config.0.max_retry_duration
-              - retry_config.0.min_backoff_duration
-              - retry_config.0.max_backoff_duration
-              - retry_config.0.max_doublings
           - !ruby/object:Api::Type::String
             name: maxRetryDuration
             description: |
@@ -104,12 +98,6 @@ objects:
               A duration in seconds with up to nine fractional digits, terminated by 's'.
             required: false
             input: true
-            at_least_one_of:
-              - retry_config.0.retry_count
-              - retry_config.0.max_retry_duration
-              - retry_config.0.min_backoff_duration
-              - retry_config.0.max_backoff_duration
-              - retry_config.0.max_doublings
           - !ruby/object:Api::Type::String
             name: minBackoffDuration
             description: |
@@ -117,12 +105,6 @@ objects:
               A duration in seconds with up to nine fractional digits, terminated by 's'.
             required: false
             input: true
-            at_least_one_of:
-              - retry_config.0.retry_count
-              - retry_config.0.max_retry_duration
-              - retry_config.0.min_backoff_duration
-              - retry_config.0.max_backoff_duration
-              - retry_config.0.max_doublings
           - !ruby/object:Api::Type::String
             name: maxBackoffDuration
             description: |
@@ -130,12 +112,6 @@ objects:
               A duration in seconds with up to nine fractional digits, terminated by 's'.
             required: false
             input: true
-            at_least_one_of:
-              - retry_config.0.retry_count
-              - retry_config.0.max_retry_duration
-              - retry_config.0.min_backoff_duration
-              - retry_config.0.max_backoff_duration
-              - retry_config.0.max_doublings
           - !ruby/object:Api::Type::Integer
             name: maxDoublings
             description: |
@@ -145,12 +121,6 @@ objects:
               and finally retries retries at intervals of maxBackoffDuration up to retryCount times.
             required: false
             input: true
-            at_least_one_of:
-              - retry_config.0.retry_count
-              - retry_config.0.max_retry_duration
-              - retry_config.0.min_backoff_duration
-              - retry_config.0.max_backoff_duration
-              - retry_config.0.max_doublings
       - !ruby/object:Api::Type::NestedObject
         name: pubsubTarget
         description: |
@@ -158,10 +128,9 @@ objects:
           If the job providers a Pub/Sub target the cron will publish
           a message to the provided topic
         input: true
-        exactly_one_of:
-          - pubsub_target
-          - http_target
-          - app_engine_http_target
+        conflicts: 
+          - httpTarget
+          - appEngineHttpTarget
         properties:
           - !ruby/object:Api::Type::String
             name: topicName
@@ -192,10 +161,9 @@ objects:
           If the job providers a App Engine HTTP target the cron will 
           send a request to the service instance
         input: true
-        exactly_one_of:
-          - pubsub_target
-          - http_target
-          - app_engine_http_target
+        conflicts: 
+          - pubsubTarget
+          - httpTarget
         properties:
           - !ruby/object:Api::Type::String
             name: httpMethod
@@ -215,10 +183,6 @@ objects:
                 description: |
                   App service.
                   By default, the job is sent to the service which is the default service when the job is attempted.
-                at_least_one_of:
-                  - app_engine_http_target.0.app_engine_routing.0.service
-                  - app_engine_http_target.0.app_engine_routing.0.version
-                  - app_engine_http_target.0.app_engine_routing.0.instance
                 required: false
                 input: true
               - !ruby/object:Api::Type::String
@@ -226,10 +190,6 @@ objects:
                 description: |
                   App version.
                   By default, the job is sent to the version which is the default version when the job is attempted.
-                at_least_one_of:
-                  - app_engine_http_target.0.app_engine_routing.0.service
-                  - app_engine_http_target.0.app_engine_routing.0.version
-                  - app_engine_http_target.0.app_engine_routing.0.instance
                 required: false
                 input: true
               - !ruby/object:Api::Type::String
@@ -237,10 +197,6 @@ objects:
                 description: |
                   App instance.
                   By default, the job is sent to an instance which is available when the job is attempted.
-                at_least_one_of:
-                  - app_engine_http_target.0.app_engine_routing.0.service
-                  - app_engine_http_target.0.app_engine_routing.0.version
-                  - app_engine_http_target.0.app_engine_routing.0.instance
                 required: false
                 input: true
           - !ruby/object:Api::Type::String
@@ -275,10 +231,9 @@ objects:
           If the job providers a http_target the cron will 
           send a request to the targeted url
         input: true
-        exactly_one_of:
-          - pubsub_target
-          - http_target
-          - app_engine_http_target
+        conflicts: 
+          - pubsubTarget
+          - appEngineHttpTarget
         properties:
           - !ruby/object:Api::Type::String
             name: uri
@@ -312,7 +267,6 @@ objects:
             properties:
               - !ruby/object:Api::Type::String
                 name: serviceAccountEmail
-                required: true
                 description: |
                   Service account email to be used for generating OAuth token.
                   The service account must be within the same project as the job.
@@ -330,7 +284,6 @@ objects:
             properties:
               - !ruby/object:Api::Type::String
                 name: serviceAccountEmail
-                required: true
                 description: |
                   Service account email to be used for generating OAuth token.
                   The service account must be within the same project as the job.

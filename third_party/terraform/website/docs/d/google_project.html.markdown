@@ -16,11 +16,10 @@ For more information see
 ## Example Usage
 
 ```hcl
-data "google_project" "project" {
-}
+data "google_project" "project" {}
 
 output "project_number" {
-  value = data.google_project.project.number
+  value = "${data.google_project.project.number}"
 }
 ```
 

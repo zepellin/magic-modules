@@ -200,9 +200,8 @@ func testAccCheckGoogleProjectExists(r, pid string) resource.TestCheckFunc {
 			return fmt.Errorf("No ID is set")
 		}
 
-		projectId := fmt.Sprintf("projects/%s", pid)
-		if rs.Primary.ID != projectId {
-			return fmt.Errorf("Expected project %q to match ID %q in state", projectId, rs.Primary.ID)
+		if rs.Primary.ID != pid {
+			return fmt.Errorf("Expected project %q to match ID %q in state", pid, rs.Primary.ID)
 		}
 
 		return nil

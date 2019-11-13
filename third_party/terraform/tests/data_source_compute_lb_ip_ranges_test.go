@@ -30,6 +30,5 @@ func TestAccDataSourceComputeLbIpRanges_basic(t *testing.T) {
 }
 
 const testAccComputeLbIpRangesConfig = `
-data "google_compute_lb_ip_ranges" "some" {
-}
+data "google_compute_lb_ip_ranges" "some" {}
 `

@@ -101,7 +101,7 @@ func testAccCheckComputeSecurityPolicyDestroy(s *terraform.State) error {
 			continue
 		}
 
-		pol := rs.Primary.Attributes["name"]
+		pol := rs.Primary.ID
 
 		_, err := config.clientComputeBeta.SecurityPolicies.Get(config.Project, pol).Do()
 		if err == nil {

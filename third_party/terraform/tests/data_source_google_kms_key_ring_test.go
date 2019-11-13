@@ -29,9 +29,10 @@ func TestAccDataSourceGoogleKmsKeyRing_basic(t *testing.T) {
 
 func testAccDataSourceGoogleKmsKeyRing_basic(keyRingName string) string {
 	return fmt.Sprintf(`
+
 data "google_kms_key_ring" "kms_key_ring" {
-  name     = "%s"
-  location = "global"
+	name     = "%s"
+	location = "global"
 }
-`, keyRingName)
+	`, keyRingName)
 }

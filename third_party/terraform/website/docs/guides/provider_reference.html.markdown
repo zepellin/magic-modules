@@ -213,7 +213,6 @@ an access token using the service account key specified in `credentials`.
     * https://www.googleapis.com/auth/cloud-platform
     * https://www.googleapis.com/auth/ndev.clouddns.readwrite
     * https://www.googleapis.com/auth/devstorage.full_control
-    * https://www.googleapis.com/auth/userinfo.email
 
 ---
 
@@ -319,7 +318,8 @@ as their versioned counterpart but that won't necessarily always be the case.
 
 **So far, batching is implemented for**:
 
-* enabling project services using `google_project_service`.
+* enabling project services using `google_project_service` or
+  `google_project_services`
 
 The `batching` block supports the following fields.
 

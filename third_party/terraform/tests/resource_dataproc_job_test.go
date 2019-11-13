@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	// "regexp"
+	"regexp"
 
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
@@ -22,22 +22,21 @@ type jobTestField struct {
 	gcp_attr interface{}
 }
 
-// TODO (mbang): Test `ExactlyOneOf` here
-// func TestAccDataprocJob_failForMissingJobConfig(t *testing.T) {
-// 	t.Parallel()
+func TestAccDataprocJob_failForMissingJobConfig(t *testing.T) {
+	t.Parallel()
 
-// 	resource.Test(t, resource.TestCase{
-// 		PreCheck:     func() { testAccPreCheck(t) },
-// 		Providers:    testAccProviders,
-// 		CheckDestroy: testAccCheckDataprocJobDestroy,
-// 		Steps: []resource.TestStep{
-// 			{
-// 				Config:      testAccDataprocJob_missingJobConf(),
-// 				ExpectError: regexp.MustCompile("You must define and configure exactly one xxx_config block"),
-// 			},
-// 		},
-// 	})
-// }
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckDataprocJobDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config:      testAccDataprocJob_missingJobConf(),
+				ExpectError: regexp.MustCompile("You must define and configure exactly one xxx_config block"),
+			},
+		},
+	})
+}
 
 func TestAccDataprocJob_updatable(t *testing.T) {
 	t.Parallel()
@@ -284,10 +283,8 @@ func testAccCheckDataprocJobDestroy(s *terraform.State) error {
 			return err
 		}
 
-		parts := strings.Split(rs.Primary.ID, "/")
-		job_id := parts[len(parts)-1]
 		_, err = config.clientDataproc.Projects.Regions.Jobs.Get(
-			project, attributes["region"], job_id).Do()
+			project, attributes["region"], rs.Primary.ID).Do()
 		if err != nil {
 			if gerr, ok := err.(*googleapi.Error); ok && gerr.Code == 404 {
 				return nil
@@ -370,8 +367,7 @@ func testAccCheckDataprocJobExists(n string, job *dataproc.Job) resource.TestChe
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		parts := strings.Split(s.RootModule().Resources[n].Primary.ID, "/")
-		jobId := parts[len(parts)-1]
+		jobId := s.RootModule().Resources[n].Primary.ID
 		project, err := getTestProject(s.RootModule().Resources[n].Primary, config)
 		if err != nil {
 			return err
@@ -473,17 +469,16 @@ func testAccCheckDataprocJobAttrMatch(n, jobType string, job *dataproc.Job) reso
 	}
 }
 
-// TODO (mbang): Test `ExactlyOneOf` here
-// func testAccDataprocJob_missingJobConf() string {
-// 	return `
-// resource "google_dataproc_job" "missing_config" {
-// 	placement {
-// 		cluster_name = "na"
-// 	}
+func testAccDataprocJob_missingJobConf() string {
+	return `
+resource "google_dataproc_job" "missing_config" {
+	placement {
+		cluster_name = "na"
+	}
 
-// 	force_delete = true
-// }`
-// }
+	force_delete = true
+}`
+}
 
 var singleNodeClusterConfig = `
 resource "google_dataproc_cluster" "basic" {

@@ -53,15 +53,14 @@ func testAccCheckComputeTargetSslProxy(n, proxyHeader, sslCert string) resource.
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		name := rs.Primary.Attributes["name"]
 
 		found, err := config.clientCompute.TargetSslProxies.Get(
-			config.Project, name).Do()
+			config.Project, rs.Primary.ID).Do()
 		if err != nil {
 			return err
 		}
 
-		if found.Name != name {
+		if found.Name != rs.Primary.ID {
 			return fmt.Errorf("TargetSslProxy not found")
 		}
 

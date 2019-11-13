@@ -45,16 +45,14 @@ func testAccCheckComputeSslCertificateExists(n string) resource.TestCheckFunc {
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		// We don't specify a name, but it is saved during create
-		name := rs.Primary.Attributes["name"]
 
 		found, err := config.clientCompute.SslCertificates.Get(
-			config.Project, name).Do()
+			config.Project, rs.Primary.ID).Do()
 		if err != nil {
 			return err
 		}
 
-		if found.Name != name {
+		if found.Name != rs.Primary.ID {
 			return fmt.Errorf("Certificate not found")
 		}
 

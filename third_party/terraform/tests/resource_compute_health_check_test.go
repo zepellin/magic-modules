@@ -164,7 +164,6 @@ resource "google_compute_health_check" "foobar" {
 	timeout_sec = 2
 	unhealthy_threshold = 3
 	tcp_health_check {
-		port = 443
 	}
 }
 `, hckName)
@@ -327,10 +326,8 @@ resource "google_compute_health_check" "foobar" {
 	unhealthy_threshold = 3
 
 	tcp_health_check {
-		port = 443
 	}
 	ssl_health_check {
-		port = 443
 	}
 }
 `, hckName)

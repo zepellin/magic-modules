@@ -107,15 +107,14 @@ func testAccCheckComputeUrlMapExists(n string) resource.TestCheckFunc {
 		}
 
 		config := testAccProvider.Meta().(*Config)
-		name := rs.Primary.Attributes["name"]
 
 		found, err := config.clientCompute.UrlMaps.Get(
-			config.Project, name).Do()
+			config.Project, rs.Primary.ID).Do()
 		if err != nil {
 			return err
 		}
 
-		if found.Name != name {
+		if found.Name != rs.Primary.ID {
 			return fmt.Errorf("Url map not found")
 		}
 		return nil
